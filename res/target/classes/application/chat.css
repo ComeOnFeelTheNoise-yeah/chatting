@@ -1,0 +1,19 @@
+.chat-list-view .chat-scroll-pane {
+    -fx-padding: 5px;
+    -fx-background-insets: 0;
+    -fx-background-color: transparent;
+}
+
+#chat-bubble-left {
+    -fx-padding: 10;
+    -fx-text-fill: #FF5C5C;
+    -fx-background-color: white;
+    -fx-background-radius: 0 20 20 20;
+}
+
+.chat-bubble-right {
+    -fx-padding: 10;
+    -fx-text-fill: white;
+    -fx-background-color: #FF5C5C;
+    -fx-background-radius: 20 0 20 20;
+}

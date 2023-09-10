@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="960.0" prefWidth="500.0" xmlns:profileEditFx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.profileController">
+	<children>
+		<VBox prefHeight="960.0" prefWidth="500.0" style="-fx-background-color: #EFF8FD;" />
+      <VBox alignment="CENTER" layoutY="-9.0" prefHeight="982.0" prefWidth="500.0" style="-fx-background-color: black;">
+         <children>
+            <ImageView fx:id="coverImage" disable="true" fitHeight="961.0" fitWidth="500.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" style="-fx-background-color: black;" />
+         </children>
+      </VBox>
+		<VBox layoutX="17.0" layoutY="20.0" prefHeight="17.0" prefWidth="24.0">
+			<children>
+				<ImageView fx:id="goBack" fitHeight="19.0" fitWidth="21.0" onMouseClicked="#handleBtnClick">
+					<image>
+						<Image url="@..\arrow.png" />
+					</image>
+				</ImageView>
+			</children>
+		</VBox>
+		<VBox layoutX="426.0" layoutY="21.0" prefHeight="17.0" prefWidth="18.0">
+			<children>
+				<ImageView fitHeight="17.0" fitWidth="17.0">
+					<image>
+						<Image url="@..\small.png" />
+					</image>
+				</ImageView>
+			</children>
+		</VBox>
+		<VBox layoutX="446.0" layoutY="21.0" prefHeight="17.0" prefWidth="18.0">
+			<children>
+				<ImageView fitHeight="17.0" fitWidth="17.0">
+					<image>
+						<Image url="@..\big.png" />
+					</image>
+				</ImageView>
+			</children>
+		</VBox>
+		<VBox layoutX="465.0" layoutY="21.0" prefHeight="17.0" prefWidth="18.0">
+			<children>
+				<ImageView fitHeight="17.0" fitWidth="17.0">
+					<image>
+						<Image url="@..\end.png" />
+					</image>
+				</ImageView>
+			</children>
+		</VBox>
+
+            		<VBox alignment="TOP_CENTER" layoutX="138.0" layoutY="567.0" prefHeight="202.0" prefWidth="242.0">
+			<children>
+            <ImageView fx:id="profileImage" disable="true" fitHeight="175.0" fitWidth="175.0" nodeOrientation="INHERIT" preserveRatio="true" />
+			</children>
+		</VBox>
+		<VBox layoutX="152.0" layoutY="780.0" prefHeight="28.0" prefWidth="204.0" style="-fx-background-color: black;">
+         <children>
+            <Text fx:id="profileNick" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="207.0">
+               <font>
+                  <Font name="Hancom Gothic Regular" size="18.0" />
+               </font></Text>
+         </children>
+		</VBox>
+
+      		<!-- <VBox layoutX="179.0" layoutY="777.0" prefHeight="4.0" prefWidth="146.0"> 
+			<children> <TextField alignment="CENTER" prefHeight="53.0" prefWidth="345.0"> 
+      			<font> <Font name="Arial" size="12.0" /> </font> </TextField> <VBox prefHeight="23.0" 
+      			prefWidth="29.0" /> </children> </VBox> -->
+		<VBox layoutX="232.0" layoutY="825.0" prefHeight="28.0" prefWidth="36.0">
+			<children>
+				<ImageView fx:id="profileEditBtn" fitHeight="36.0" fitWidth="36.0" onMouseClicked="#goToEdit">
+					<image>
+						<Image url="@..\edit.png" />
+					</image>
+				</ImageView>
+			</children>
+		</VBox>
+		<VBox layoutX="209.0" layoutY="874.0" prefHeight="28.0" prefWidth="82.0" style="-fx-background-color: black;">
+			<children>
+				<!-- <Button mnemonicParsing="false" onAction="#changeProfilePicture" 
+					prefHeight="25.0" prefWidth="92.0" text="프로필 편집" textAlignment="CENTER"/> -->
+
+				<Button mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-focus-color: transparent;                -fx-background-radius: 0; -fx-border-radius: 0;               -fx-font-family: 'NanumBarunGothic';" text="프로필 편집" textAlignment="CENTER" textFill="WHITE">
+					<font>
+						<Font name="Arial" size="12.0" />
+					</font>
+				</Button>
+
+				<!-- <Button mnemonicParsing="false" prefHeight="28.0" prefWidth="97.0" 
+					style="-fx-background-color: transparent; -fx-border-color: transparent;" 
+					text="프로필 편집" textAlignment="CENTER" /> -->
+
+				<!-- <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" 
+					text="프로필 편집" textAlignment="CENTER" /> -->
+			</children>
+		</VBox>
+	</children>
+</Pane>

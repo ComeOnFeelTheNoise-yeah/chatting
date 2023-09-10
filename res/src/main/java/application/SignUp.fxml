@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="960.0" prefWidth="500.0" style="-fx-background-color: #EFF8FD;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
+   <children>
+      <Pane layoutX="132.0" layoutY="283.0" prefHeight="41.0" prefWidth="322.0">
+         <children>
+            <TextField fx:id="name" prefHeight="44.0" prefWidth="322.0" />
+         </children></Pane>
+      <Pane layoutX="132.0" layoutY="343.0" prefHeight="41.0" prefWidth="322.0">
+         <children>
+            <TextField fx:id="birth" layoutY="-2.0" prefHeight="44.0" prefWidth="322.0" />
+         </children></Pane>
+      <Pane layoutX="132.0" layoutY="403.0" prefHeight="41.0" prefWidth="322.0">
+         <children>
+            <TextField fx:id="tel" layoutY="-4.0" prefHeight="44.0" prefWidth="322.0" />
+         </children></Pane>
+      <Pane layoutX="132.0" layoutY="453.0" prefHeight="41.0" prefWidth="322.0">
+         <children>
+            <TextField fx:id="email" layoutY="-1.0" prefHeight="44.0" prefWidth="322.0" />
+         </children></Pane>
+      <Pane layoutX="132.0" layoutY="508.0" prefHeight="41.0" prefWidth="322.0" />
+      <Pane layoutX="132.0" layoutY="567.0" prefHeight="41.0" prefWidth="322.0" />
+      <Pane layoutX="272.0" layoutY="680.0" prefHeight="93.0" prefWidth="125.0">
+         <children>
+            <ImageView fx:id="cancelBtn" fitHeight="99.0" fitWidth="136.0" layoutX="-4.0" onMouseClicked="#backTo">
+               <image>
+                  <Image url="@../cancel_btn.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+      <Text layoutX="58.0" layoutY="483.0" strokeType="OUTSIDE" strokeWidth="0.0" text="이메일" />
+      <Text layoutX="52.0" layoutY="308.0" strokeType="OUTSIDE" strokeWidth="0.0" text="이름" />
+      <Text layoutX="52.0" layoutY="426.0" strokeType="OUTSIDE" strokeWidth="0.0" text="전화번호" />
+      <Text layoutX="52.0" layoutY="366.0" strokeType="OUTSIDE" strokeWidth="0.0" text="생년월일" />
+      <Text layoutX="52.0" layoutY="533.0" strokeType="OUTSIDE" strokeWidth="0.0" text="비밀번호" />
+      <Text layoutX="52.0" layoutY="591.0" strokeType="OUTSIDE" strokeWidth="0.0" text="비밀번호 확인 " />
+      <Pane layoutX="166.0" layoutY="41.0" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutY="66.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../logo.png" />
+               </image>
+            </ImageView>
+            <Text layoutX="50.0" layoutY="42.0" strokeType="OUTSIDE" strokeWidth="0.0" text="회원가입" wrappingWidth="114.0">
+               <font>
+                  <Font name="HCR Batang Bold" size="26.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <PasswordField fx:id="pw" layoutX="132.0" layoutY="506.0" prefHeight="44.0" prefWidth="322.0" />
+      <PasswordField fx:id="pwCheck" layoutX="132.0" layoutY="565.0" prefHeight="44.0" prefWidth="322.0" />
+      <Label fx:id="errorLabel" layoutX="115.0" layoutY="618.0" prefHeight="52.0" prefWidth="335.0" />
+      <ImageView id="signUp" fx:id="signUp" fitHeight="99.0" fitWidth="136.0" layoutX="91.0" layoutY="677.0" onMouseClicked="#registerCheck">
+         <image>
+            <Image url="@../register_btn.png" />
+         </image>
+      </ImageView>
+   </children>
+</Pane>
