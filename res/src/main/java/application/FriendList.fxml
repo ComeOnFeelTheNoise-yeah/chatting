@@ -46,7 +46,7 @@
 						<Font size="20.0" />
 					</font>
 				</Label>
-      		<Text fx:id="name" layoutX="43.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="60.0">
+      		<Text fx:id="name" layoutX="43.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="86.0">
       			<font>
       				<Font size="24.0" />
       			</font>

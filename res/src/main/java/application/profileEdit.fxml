@@ -12,165 +12,87 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity"
-	minHeight="-Infinity" minWidth="-Infinity" prefHeight="960.0"
-	prefWidth="500.0" xmlns="http://javafx.com/javafx/20.0.1"
-	xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="application.ProfileEditController">
-	<children>
-		<Pane layoutX="9.0" layoutY="6.0" prefHeight="51.0"
-			prefWidth="58.0">
-			<children>
-				<ImageView fx:id="goBack" fitHeight="46.0" fitWidth="46.0"
-					layoutX="7.0" style="-fx-opacity: 1;">
-					<image>
-						<Image url="@../arrow.png" />
-					</image>
-				</ImageView>
-			</children>
-		</Pane>
-		<HBox alignment="CENTER" layoutX="393.0" layoutY="-10.0"
-			prefHeight="80.0" prefWidth="112.0">
-			<children>
-				<ImageView fitHeight="17.0" fitWidth="17.0"
-					pickOnBounds="true" preserveRatio="true">
-					<image>
-						<Image url="@../small.png" />
-					</image>
-					<HBox.margin>
-						<Insets left="10.0" />
-					</HBox.margin>
-				</ImageView>
-				<ImageView fitHeight="17.0" fitWidth="17.0"
-					pickOnBounds="true" preserveRatio="true">
-					<image>
-						<Image url="@../big.png" />
-					</image>
-					<HBox.margin>
-						<Insets left="5.0" />
-					</HBox.margin>
-				</ImageView>
-				<ImageView fitHeight="17.0" fitWidth="17.0"
-					pickOnBounds="true" preserveRatio="true">
-					<image>
-						<Image url="@../end.png" />
-					</image>
-					<HBox.margin>
-						<Insets left="5.0" />
-					</HBox.margin>
-				</ImageView>
-			</children>
-			<opaqueInsets>
-				<Insets />
-			</opaqueInsets>
-		</HBox>
-		<ImageView fx:id="changeProfileBtn" fitHeight="35.0"
-			fitWidth="35.0" layoutX="320.0" layoutY="235.0"
-			onMouseClicked="#changeProfile" pickOnBounds="true"
-			preserveRatio="true">
-			<image>
-				<Image url="@../camera.png" />
-			</image>
-		</ImageView>
-		<TextField fx:id="nameChange" layoutX="126.0"
-			layoutY="294.0" prefHeight="22.0" prefWidth="221.0" />
-		<TextField fx:id="phoneChange" layoutX="128.0"
-			layoutY="338.0" prefHeight="22.0" prefWidth="217.0" />
-		<VBox alignment="CENTER" layoutX="191.0" layoutY="817.0"
-			prefHeight="108.0" prefWidth="122.0">
-			<children>
-				<ImageView id="config" fx:id="changeEveryBtn"
-					fitHeight="58.0" fitWidth="38.0" onMouseClicked="#changeEveryThing"
-					pickOnBounds="true" preserveRatio="true">
-					<image>
-						<Image url="@../edit.png" />
-					</image>
-				</ImageView>
-				<Text strokeType="OUTSIDE" strokeWidth="0.0" text="저장" />
-			</children>
-		</VBox>
-		<ImageView fx:id="profileImage" disable="true"
-			fitHeight="124.0" fitWidth="122.0" layoutX="183.0" layoutY="111.0"
-			pickOnBounds="true" preserveRatio="true" />
-		<ImageView fx:id="changeCoverBtn" fitHeight="80.0"
-			fitWidth="81.0" layoutX="369.0" layoutY="589.0"
-			onMouseClicked="#changeCover" pickOnBounds="true"
-			preserveRatio="true">
-			<image>
-				<Image url="@../changeCover.png" />
-			</image>
-		</ImageView>
-		<ImageView fx:id="coverImage" disable="true"
-			fitHeight="198.0" fitWidth="217.0" layoutX="135.0" layoutY="530.0"
-			pickOnBounds="true" preserveRatio="true" />
-		<Text layoutX="46.0" layoutY="311.0" strokeType="OUTSIDE"
-			strokeWidth="0.0" text="닉네임">
-			<font>
-				<Font name="Hancom Gothic Regular" size="12.0" />
-			</font>
-		</Text>
-		<Text disable="true" layoutX="36.0" layoutY="355.0"
-			strokeType="OUTSIDE" strokeWidth="0.0" text="휴대폰 번호 ">
-			<font>
-				<Font name="Hancom Gothic Regular" size="12.0" />
-			</font>
-		</Text>
-		<Text disable="true" layoutX="211.0" layoutY="493.0"
-			strokeType="OUTSIDE" strokeWidth="0.0" text="배경화면"
-			textAlignment="CENTER" wrappingWidth="87.0">
-			<font>
-				<Font name="Hancom Gothic Regular" size="12.0" />
-			</font>
-		</Text>
-		<Label fx:id="errorLabel" layoutX="99.0" layoutY="410.0"
-			prefHeight="18.0" prefWidth="105.0" />
-	</children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="960.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ProfileEditController">
+   <children>
+      <Pane layoutX="9.0" layoutY="6.0" prefHeight="51.0" prefWidth="58.0">
+         <children>
+            <ImageView fx:id="goBack" fitHeight="46.0" fitWidth="46.0" layoutX="7.0" style="-fx-opacity: 1;">
+               <image>
+                  <Image url="@../arrow.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+      <HBox alignment="CENTER" layoutX="393.0" layoutY="-10.0" prefHeight="80.0" prefWidth="112.0">
+         <children>
+            <ImageView fitHeight="17.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../small.png" />
+               </image>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </ImageView>
+            <ImageView fitHeight="17.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../big.png" />
+               </image>
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </ImageView>
+            <ImageView fitHeight="17.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../end.png" />
+               </image>
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </ImageView>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </HBox>
+      <ImageView fx:id="changeProfileBtn" fitHeight="35.0" fitWidth="35.0" layoutX="320.0" layoutY="235.0" onMouseClicked="#changeProfile" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../camera.png" />
+         </image>
+      </ImageView>
+      <TextField fx:id="nameChange" layoutX="126.0" layoutY="294.0" prefHeight="22.0" prefWidth="221.0" />
+      <TextField fx:id="phoneChange" layoutX="128.0" layoutY="338.0" prefHeight="22.0" prefWidth="217.0" />
+      <VBox alignment="CENTER" layoutX="191.0" layoutY="817.0" prefHeight="108.0" prefWidth="122.0">
+         <children>
+            <ImageView id="config" fx:id="changeEveryBtn" fitHeight="58.0" fitWidth="38.0" onMouseClicked="#changeEveryThing" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../edit.png" />
+               </image>
+            </ImageView>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="저장" />
+         </children>
+      </VBox>
+      <ImageView fx:id="profileImage" disable="true" fitHeight="124.0" fitWidth="122.0" layoutX="183.0" layoutY="111.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="changeCoverBtn" fitHeight="80.0" fitWidth="81.0" layoutX="369.0" layoutY="589.0" onMouseClicked="#changeCover" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../changeCover.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="coverImage" disable="true" fitHeight="198.0" fitWidth="217.0" layoutX="135.0" layoutY="530.0" pickOnBounds="true" preserveRatio="true" />
+      <Text layoutX="46.0" layoutY="311.0" strokeType="OUTSIDE" strokeWidth="0.0" text="닉네임">
+         <font>
+            <Font name="Hancom Gothic Regular" size="12.0" />
+         </font>
+      </Text>
+      <Text disable="true" layoutX="36.0" layoutY="355.0" strokeType="OUTSIDE" strokeWidth="0.0" text="휴대폰 번호 ">
+         <font>
+            <Font name="Hancom Gothic Regular" size="12.0" />
+         </font>
+      </Text>
+      <Text disable="true" layoutX="211.0" layoutY="493.0" strokeType="OUTSIDE" strokeWidth="0.0" text="배경화면" textAlignment="CENTER" wrappingWidth="87.0">
+         <font>
+            <Font name="Hancom Gothic Regular" size="12.0" />
+         </font>
+      </Text>
+      <Label fx:id="errorLabel" layoutX="99.0" layoutY="410.0" prefHeight="18.0" prefWidth="105.0" />
+   </children>
 </AnchorPane>
-
-<!-- <?xml version="1.0" encoding="UTF-8"?> <?import javafx.geometry.Insets?> 
-	<?import javafx.scene.control.Label?> <?import javafx.scene.control.TextField?> 
-	<?import javafx.scene.image.Image?> <?import javafx.scene.image.ImageView?> 
-	<?import javafx.scene.layout.AnchorPane?> <?import javafx.scene.layout.HBox?> 
-	<?import javafx.scene.layout.Pane?> <?import javafx.scene.layout.VBox?> <?import 
-	javafx.scene.text.Font?> <?import javafx.scene.text.Text?> <AnchorPane maxHeight="-Infinity" 
-	maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="960.0" 
-	prefWidth="500.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" 
-	fx:controller="application.ProfileEditController"> <children> <Pane layoutX="9.0" 
-	layoutY="6.0" prefHeight="51.0" prefWidth="58.0"> <children> <ImageView fx:id="goBack" 
-	fitHeight="46.0" fitWidth="46.0" layoutX="7.0" style="-fx-opacity: 1;"> <image> 
-	<Image url="@../arrow.png" /> </image> </ImageView> </children> </Pane> <HBox 
-	alignment="CENTER" layoutX="393.0" layoutY="-10.0" prefHeight="80.0" prefWidth="112.0"> 
-	<children> <ImageView fitHeight="17.0" fitWidth="17.0" pickOnBounds="true" 
-	preserveRatio="true"> <image> <Image url="@../small.png" /> </image> <HBox.margin> 
-	<Insets left="10.0" /> </HBox.margin> </ImageView> <ImageView fitHeight="17.0" 
-	fitWidth="17.0" pickOnBounds="true" preserveRatio="true"> <image> <Image 
-	url="@../big.png" /> </image> <HBox.margin> <Insets left="5.0" /> </HBox.margin> 
-	</ImageView> <ImageView fitHeight="17.0" fitWidth="17.0" pickOnBounds="true" 
-	preserveRatio="true"> <image> <Image url="@../end.png" /> </image> <HBox.margin> 
-	<Insets left="5.0" /> </HBox.margin> </ImageView> </children> <opaqueInsets> 
-	<Insets /> </opaqueInsets> </HBox> <ImageView fx:id="changeProfileBtn" fitHeight="35.0" 
-	fitWidth="35.0" layoutX="320.0" layoutY="235.0" onMouseClicked="#changeProfile" 
-	pickOnBounds="true" preserveRatio="true"> <image> <Image url="@../camera.png" 
-	/> </image> </ImageView> <TextField fx:id="nameChange" layoutX="126.0" layoutY="294.0" 
-	prefHeight="22.0" prefWidth="221.0" /> <TextField fx:id="phoneChange" layoutX="128.0" 
-	layoutY="338.0" prefHeight="22.0" prefWidth="217.0" /> <VBox alignment="CENTER" 
-	layoutX="191.0" layoutY="817.0" prefHeight="108.0" prefWidth="122.0"> <children> 
-	<ImageView id="config" fx:id="changeEveryBtn" fitHeight="58.0" fitWidth="38.0" 
-	onMouseClicked="#changeEveryThing" pickOnBounds="true" preserveRatio="true"> 
-	<image> <Image url="@../edit.png" /> </image> </ImageView> <Text strokeType="OUTSIDE" 
-	strokeWidth="0.0" text="저장" /> </children> </VBox> <ImageView fx:id="profileImage" 
-	disable="true" fitHeight="124.0" fitWidth="122.0" layoutX="183.0" layoutY="111.0" 
-	pickOnBounds="true" preserveRatio="true" /> <ImageView fx:id="changeCoverBtn" 
-	fitHeight="80.0" fitWidth="81.0" layoutX="369.0" layoutY="589.0" onMouseClicked="#changeCover" 
-	pickOnBounds="true" preserveRatio="true"> <image> <Image url="@../changeCover.png" 
-	/> </image> </ImageView> <ImageView fx:id="coverImage" disable="true" fitHeight="198.0" 
-	fitWidth="217.0" layoutX="135.0" layoutY="530.0" pickOnBounds="true" preserveRatio="true" 
-	/> <Text layoutX="46.0" layoutY="311.0" strokeType="OUTSIDE" strokeWidth="0.0" 
-	text="닉네임"> <font> <Font name="Hancom Gothic Regular" size="12.0" /> </font> 
-	</Text> <Text disable="true" layoutX="36.0" layoutY="355.0" strokeType="OUTSIDE" 
-	strokeWidth="0.0" text="휴대폰 번호 "> <font> <Font name="Hancom Gothic Regular" 
-	size="12.0" /> </font> </Text> <Text disable="true" layoutX="211.0" layoutY="493.0" 
-	strokeType="OUTSIDE" strokeWidth="0.0" text="배경화면" textAlignment="CENTER" 
-	wrappingWidth="87.0"> <font> <Font name="Hancom Gothic Regular" size="12.0" 
-	/> </font> </Text> <Label fx:id="errorLabel" layoutX="99.0" layoutY="410.0" 
-	prefHeight="18.0" prefWidth="105.0" /> </children> </AnchorPane> -->

@@ -9,44 +9,36 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity"
-	minHeight="-Infinity" minWidth="-Infinity" prefHeight="960.0"
-	prefWidth="500.0" xmlns="http://javafx.com/javafx/20.0.1"
-	xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="application.LoginController">
-	<children>
-		<ImageView fitHeight="960.0" fitWidth="500.0" layoutY="1.0">
-			<image>
-				<Image url="@../login.png" />
-			</image>
-		</ImageView>
-		<TextField fx:id="idInput" layoutX="168.0" layoutY="501.0"
-			prefHeight="22.0" prefWidth="162.0" />
-		<HBox alignment="CENTER" layoutX="111.0" layoutY="603.0"
-			prefHeight="47.0" prefWidth="262.0">
-			<children>
-				<Button fx:id="member_register" mnemonicParsing="false"
-					onMouseClicked="#goRegister" style="-fx-background-color: blue;"
-					text="회원가입" textAlignment="CENTER">
-					<HBox.margin>
-						<Insets left="5.0" />
-					</HBox.margin>
-				</Button>
-				<Button fx:id="login" mnemonicParsing="false"
-					onMouseClicked="#goLogin" style="-fx-background-color: blue;"
-					text="로그인" textAlignment="CENTER">
-					<HBox.margin>
-						<Insets left="80.0" />
-					</HBox.margin>
-				</Button>
-			</children>
-		</HBox>
-		<Label fx:id="errorLabel" layoutX="92.0" layoutY="650.0"
-			prefHeight="22.0" prefWidth="317.0" />
-		<PasswordField fx:id="pwInput" layoutX="169.0"
-			layoutY="569.0" />
-		<Label layoutX="104.0" layoutY="573.0" text="비밀번호" />
-		<Label layoutX="110.0" layoutY="505.0" text="아이디" />
-	</children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="960.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.LoginController">
+   <children>
+      <ImageView fitHeight="960.0" fitWidth="500.0" layoutY="1.0">
+         <image>
+            <Image url="@../login.png" />
+         </image>
+      </ImageView>
+      <TextField fx:id="idInput" layoutX="168.0" layoutY="495.0" prefHeight="28.0" prefWidth="175.0" />
+      <PasswordField fx:id="pwInput" layoutX="169.0" layoutY="563.0" prefHeight="28.0" prefWidth="175.0" />
+      <HBox alignment="CENTER" layoutX="111.0" layoutY="603.0" prefHeight="47.0" prefWidth="262.0">
+         <children>
+            <Button fx:id="member_register" mnemonicParsing="false" onMouseClicked="#goRegister" opacity="0.0" text="회원가입" textAlignment="CENTER" textFill="WHITE">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="login" mnemonicParsing="false" onMouseClicked="#goLogin" opacity="0.0" style="-fx-background-color: blue;" text="로그인" textAlignment="CENTER" textFill="WHITE">
+               <HBox.margin>
+                  <Insets left="80.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+      <Label fx:id="errorLabel" layoutX="92.0" layoutY="650.0" prefHeight="22.0" prefWidth="317.0" />
+      <Label layoutX="104.0" layoutY="562.0" prefHeight="28.0" prefWidth="45.0" text="비밀번호">
+         <font>
+            <Font name="Hancom Gothic Regular" size="12.0" />
+         </font></Label>
+      <Label layoutX="110.0" layoutY="497.0" prefHeight="22.0" prefWidth="36.0" text="아이디" />
+   </children>
 </AnchorPane>

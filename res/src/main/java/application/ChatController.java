@@ -1,17 +1,17 @@
 package application;
 
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.api.core.ApiFuture;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
@@ -19,157 +19,83 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.scene.control.Label;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.control.Label;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 
 public class ChatController extends Application {
-	// ObservableList·Î ¸Ş½ÃÁö ¸ñ·ÏÀ» °ü¸®ÇÕ´Ï´Ù. ListView¿Í ¹ÙÀÎµùµÇ¾î ÀÖ¾î¼­ ÀÌ ¸®½ºÆ®°¡ º¯°æµÇ¸é ÀÚµ¿À¸·Î UI°¡
-	// ¾÷µ¥ÀÌÆ®µË´Ï´Ù.
-	private ObservableList<String> messages;
-
-	@FXML
-	private Pane chat_background;
-
-	@FXML
-	private ImageView caht_back_btn;
-
-	@FXML
-	private TextArea chat_text_area;
-
-	@FXML
-	private ImageView send_btn;
-
-	@FXML
-	private Button friendBtn, chatBtn;
-
-	@FXML
-	private ListView<String> chat_list_view;
-
-	@FXML
-	private Label pinnedMessageLabel1; // FXML ÆÄÀÏ¿¡¼­ ÀÌ ID·Î LabelÀ» ¿¬°á
-
-	public ChatController() {
-		messages = FXCollections.observableArrayList();
+    private ObservableList<String> messages;
+   
+    @FXML
+    private Pane chat_background;
+    @FXML
+    private ImageView caht_back_btn;
+    @FXML
+    private TextArea chat_text_area;
+    @FXML
+    private ImageView send_btn; 
+    
+    @FXML
+    private ListView<String> chat_list_view;
+    
+    public ChatController() {
+    	messages = FXCollections.observableArrayList();
 	}
+    
+    @FXML
+    public void send() {
+    	//messages = FXCollections.observableArrayList(); 
+       
+            String text = chat_text_area.getText();  // í…ìŠ¤íŠ¸ ì˜ì—­ì˜ ë‚´ìš©ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
+            
+            if (!text.isEmpty()) {  // í…ìŠ¤íŠ¸ ì˜ì—­ì´ ë¹„ì–´ìˆì§€ ì•Šë‹¤ë©´
+                Message message = new Message(User.getInstance().getUid(), "receiver-uid", text, System.currentTimeMillis());
 
-	@FXML
-	public void handleBtnClick1(ActionEvent ae) throws IOException {
-		switchScene(ae, "profile.fxml", 570, 900);
-	}
+                // Get a reference to the database
+                DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
 
-	@FXML
-	public void handleBtnClick2(ActionEvent ae) throws IOException {
-		switchScene(ae, "chatList.fxml", 570, 900);
-	}
+             
+                Map<String, Object> messageMap = new HashMap<>();
+                messageMap.put("senderId", message.getSenderId());
+                messageMap.put("receiverId", message.getRecieverId());
+                messageMap.put("message", message.getMessage());
+                messageMap.put("timestamp", message.getTimestamp());
 
-	private void switchScene(ActionEvent ae, String fxml, int width, int height) throws IOException {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
-		Parent root = loader.load();
+                 ApiFuture<Void> future = dbRef.child("Messages").child("chat-room-uid").push().setValueAsync(messageMap);
+                 chat_text_area.clear();   // í…ìŠ¤íŠ¸ ì˜ì—­ì€ ë¹„ì›ë‹ˆë‹¤.
+                
+            }
+            messages.add(text);  // ë‚´ìš©ì„ messages ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€í•˜ê³ ,  //textë¥¼ firebaseë©”ì„œë“œ í†µí•´ì„œ ì €ì¥í•˜ê¸° 
+            // chat_list_viewì— messages ë¦¬ìŠ¤íŠ¸ë¥¼ ë°”ì¸ë”©í•©ë‹ˆë‹¤.
+            chat_list_view.setItems(messages);
+    }
+    
+    @FXML
+    public void initialize() {
+        chat_text_area.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+           if (keyEvent.getCode() == KeyCode.ENTER) { 
+               if (!keyEvent.isShiftDown()) {  // Shiftí‚¤ê°€ ëˆŒë¦¬ì§€ ì•Šì•˜ìœ¼ë©´,
+                   keyEvent.consume();         // ê¸°ë³¸ ë™ì‘(ì¤„ ë°”ê¿ˆ)ì€ ì·¨ì†Œí•˜ê³ ,
+                   send();                     // ë©”ì‹œì§€ë¥¼ ì „ì†¡í•©ë‹ˆë‹¤.
+               } else {                        // Shift+Enterê°€ ëˆŒë ¸ìœ¼ë©´,
+                   keyEvent.consume();         // ê¸°ë³¸ ë™ì‘(ì¤„ ë°”ê¿ˆ)ì€ ì·¨ì†Œí•˜ê³ ,
+                   chat_text_area.appendText("\n");  // ì§ì ‘ ì¤„ ë°”ê¿ˆ ë¬¸ìë¥¼ ì¶”ê°€í•©ë‹ˆë‹¤.
+               }
+           }
+        });
+    }
+    
+    // start ë©”ì†Œë“œì—ì„œ JavaFX ì• í”Œë¦¬ì¼€ì´ì…˜ì˜ ì´ˆê¸° ì„¤ì •ì„ í•©ë‹ˆë‹¤.
+    @Override
+    public void start(Stage primaryStage) {
 
-		Scene scene = new Scene(root, width, height);
+      	// ì”¬(Scene) ê°ì²´ë¥¼ ìƒì„±í•˜ì—¬ ë ˆì´ì•„ì›ƒ ì»¨í…Œì´ë„ˆì™€ í•¨ê»˜ ì´ˆê¸°í™”í•˜ê³ ,
+      	Scene scene = new Scene(chat_background);
 
-		Stage stage = (Stage) ((Node) ae.getSource()).getScene().getWindow();
+	    primaryStage.setTitle("Chat App");  	// ìœˆë„ìš° ì œëª©ì„ ì„¤ì •í•©ë‹ˆë‹¤.
+	    primaryStage.setScene(scene);  		// ìœˆë„ìš°ì— ì”¬(Scene) ê°ì²´ë¥¼ ì„¤ì •í•©ë‹ˆë‹¤.
+	    primaryStage.show();  				// ìœˆë„ìš°ë¥¼ ë³´ì—¬ì¤ë‹ˆë‹¤.
+    }
 
-		stage.setScene(scene);
-
-		stage.setResizable(false);
-
-		stage.show();
-	}
-
-	@FXML
-	public void send() {
-
-		String text = chat_text_area.getText(); // ÅØ½ºÆ® ¿µ¿ªÀÇ ³»¿ëÀ» °¡Á®¿É´Ï´Ù.
-
-		if (!text.isEmpty()) { // ÅØ½ºÆ® ¿µ¿ªÀÌ ºñ¾îÀÖÁö ¾Ê´Ù¸é
-			messages.add(text); // ³»¿ëÀ» messages ¸®½ºÆ®¿¡ Ãß°¡ÇÏ°í,
-			chat_text_area.clear(); // ÅØ½ºÆ® ¿µ¿ªÀº ºñ¿ó´Ï´Ù.
-		}
-
-//		// chat_list_view¿¡ messages ¸®½ºÆ®¸¦ ¹ÙÀÎµùÇÕ´Ï´Ù.
-//		chat_list_view.setItems(messages);
-
-	}
-
-	@FXML
-	public void initialize() {
-
-		// chat_list_view¿¡ messages ¸®½ºÆ®¸¦ ¹ÙÀÎµùÇÕ´Ï´Ù.
-		chat_list_view.setItems(messages);
-
-		chat_text_area.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
-			if (keyEvent.getCode() == KeyCode.ENTER) {
-				if (!keyEvent.isShiftDown()) { // ShiftÅ°°¡ ´­¸®Áö ¾Ê¾ÒÀ¸¸é,
-					keyEvent.consume(); // ±âº» µ¿ÀÛ(ÁÙ ¹Ù²Ş)Àº Ãë¼ÒÇÏ°í,
-					send(); // ¸Ş½ÃÁö¸¦ Àü¼ÛÇÕ´Ï´Ù.
-				} else { // Shift+Enter°¡ ´­·ÈÀ¸¸é,
-					keyEvent.consume(); // ±âº» µ¿ÀÛ(ÁÙ ¹Ù²Ş)Àº Ãë¼ÒÇÏ°í,
-					chat_text_area.appendText(""); // Á÷Á¢ ÁÙ ¹Ù²Ş ¹®ÀÚ¸¦ Ãß°¡ÇÕ´Ï´Ù.
-				}
-			}
-		});
-
-		// °íÁ¤¸Ş¼¼Áö
-		chat_list_view.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-			if (mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2) {
-				String selectedMessage = chat_list_view.getSelectionModel().getSelectedItem(); // ¼±ÅÃµÈ ¸Ş½ÃÁö¸¦ °¡Á®¿É´Ï´Ù.
-				if (selectedMessage != null) { // ¼±ÅÃµÈ ¸Ş½ÃÁö°¡ ÀÖ´Ù¸é,
-					pinnedMessageLabel1.setText(selectedMessage); // ÇØ´ç ¸Ş½ÃÁö¸¦ »ó´Ü¿¡ °íÁ¤ÇÕ
-				}
-			}
-		});
-
-//		chat_list_view.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-//			if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
-//				String selectedMessage = chat_list_view.getSelectionModel().getSelectedItem(); // ¼±ÅÃµÈ ¸Ş½ÃÁö¸¦ °¡Á®¿É´Ï´Ù.
-//				if (selectedMessage != null) { // ¼±ÅÃµÈ ¸Ş½ÃÁö°¡ ÀÖ´Ù¸é,
-//					pinnedMessageLabel1.setText(selectedMessage); // ÇØ´ç ¸Ş½ÃÁö¸¦ »ó´Ü¿¡ °íÁ¤ÇÕ
-//				}
-//			}
-//		});
-	}
-
-	// start ¸Ş¼Òµå¿¡¼­ JavaFX ¾ÖÇÃ¸®ÄÉÀÌ¼ÇÀÇ ÃÊ±â ¼³Á¤À» ÇÕ´Ï´Ù.
-	@Override
-	public void start(Stage primaryStage) throws IOException {
-
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("chat.fxml"));
-		Parent root = loader.load();
-
-		ChatController chatController = loader.getController();
-		chatController.chat_list_view = new ListView<>();
-
-		Scene scene = new Scene(root);
-
-		primaryStage.setTitle("Chat"); // À©µµ¿ì Á¦¸ñÀ» ¼³Á¤ÇÕ´Ï´Ù.
-		primaryStage.setScene(scene); // À©µµ¿ì¿¡ ¾À(Scene) °´Ã¼¸¦ ¼³Á¤ÇÕ´Ï´Ù.
-		primaryStage.show(); // À©µµ¿ì¸¦ º¸¿©Áİ´Ï´Ù.
-	}
-
-	// start ¸Ş¼Òµå¿¡¼­ JavaFX ¾ÖÇÃ¸®ÄÉÀÌ¼ÇÀÇ ÃÊ±â ¼³Á¤À» ÇÕ´Ï´Ù.
-//	@Override
-//	public void start(Stage primaryStage) {
-//
-//		// ¾À(Scene) °´Ã¼¸¦ »ı¼ºÇÏ¿© ·¹ÀÌ¾Æ¿ô ÄÁÅ×ÀÌ³Ê¿Í ÇÔ²² ÃÊ±âÈ­ÇÏ°í,
-//		Scene scene = new Scene(chat_background);
-//
-//		primaryStage.setTitle("Chat App"); // À©µµ¿ì Á¦¸ñÀ» ¼³Á¤ÇÕ´Ï´Ù.
-//		primaryStage.setScene(scene); // À©µµ¿ì¿¡ ¾À(Scene) °´Ã¼¸¦ ¼³Á¤ÇÕ´Ï´Ù.
-//		primaryStage.show(); // À©µµ¿ì¸¦ º¸¿©Áİ´Ï´Ù.
-//	}
-
-//    @FXML
-//    public void showGroupMessages() {
-//    	loadGroupMessages();
-//    }
-
-	// main ÇÔ¼ö¿¡¼­´Â JavaFX ¾ÖÇÃ¸®ÄÉÀÌ¼ÇÀ» ½ÃÀÛÇÏ´Â launch ¸Ş¼Òµå¸¦ È£ÃâÇÕ´Ï´Ù.
+  	// main í•¨ìˆ˜ì—ì„œëŠ” JavaFX ì• í”Œë¦¬ì¼€ì´ì…˜ì„ ì‹œì‘í•˜ëŠ” launch ë©”ì†Œë“œë¥¼ í˜¸ì¶œí•©ë‹ˆë‹¤.
 	public static void main(String[] args) {
-		launch(args);
+	   launch(args);
 	}
 }

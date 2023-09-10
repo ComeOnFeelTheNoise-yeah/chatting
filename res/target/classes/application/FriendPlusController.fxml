@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="960.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.FriendPlusController">
+	<children>
+		<ImageView fx:id="prevBtn" fitHeight="24.0" fitWidth="29.0" layoutX="10.0" layoutY="10.0">
+			<image>
+				<Image url="@../arrow.png" />
+			</image>
+		</ImageView>
+		<ImageView fx:id="small" fitHeight="20.0" fitWidth="20.0" layoutX="420.0" layoutY="14.0">
+			<image>
+				<Image url="@../small.png" />
+			</image>
+		</ImageView>
+		<ImageView fx:id="end" fitHeight="20.0" fitWidth="20.0" layoutX="440.0" layoutY="14.0">
+			<image>
+				<Image url="@../end.png" />
+			</image>
+		</ImageView>
+		<ImageView fx:id="bell" fitHeight="20.0" fitWidth="20.0" layoutX="460.0" layoutY="14.0">
+			<image>
+				<Image url="@../bell.png" />
+			</image>
+		</ImageView>
+		<ImageView id="SearchBtn" fx:id="SFRID" fitHeight="20.0" fitWidth="20.0" layoutX="375.0" layoutY="13.0" onMouseClicked="#searchBtn">
+			<image>
+				<Image url="@../search.png" />
+			</image>
+		</ImageView>
+		<TextField fx:id="FriendPlus" layoutX="264.0" layoutY="5.0" prefHeight="20.0" prefWidth="107.0" promptText="이름을 입력하세요">
+			<font>
+				<Font size="18.0" />
+			</font>
+		</TextField>
+				<AnchorPane layoutY="136.0" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="500.0">
+					<children>
+						<ListView fx:id="listView" layoutY="-1.0" prefHeight="600.0" prefWidth="500.0" styleClass="my-list-view">
+				
+						</ListView>
+
+					</children>
+				</AnchorPane>
+		<ImageView fx:id="profileImage" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
+			<image>
+				<Image url="@../Seungjun.png" />
+			</image>
+		</ImageView>
+		<Text fx:id="name" layoutX="99.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="83.21630859375">
+			<font>
+				<Font name="Hancom Gothic Regular" size="24.0" />
+			</font>
+		</Text>
+		<ImageView id="FriendList" fx:id="Flist" fitHeight="20.0" fitWidth="29.0" layoutX="400.0" layoutY="14.0" onMouseClicked="#listBtn" pickOnBounds="true" preserveRatio="true">
+			<image>
+				<Image url="@../list.png" />
+			</image>
+		</ImageView>
+	</children>
+</AnchorPane>

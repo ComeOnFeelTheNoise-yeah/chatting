@@ -27,7 +27,7 @@ public class chatListController extends Application {
 	@FXML
 	private Button addChat, search, bell, yes, no, friendBtn, chatBtn;
 
-	private ObservableList<chatRoom> chatRooms; // 채팅방 목록
+//	private ObservableList<chatRoom> chatRooms;
 
 	@FXML
 	public void handleBtnClick1(ActionEvent ae) throws IOException {
@@ -54,14 +54,14 @@ public class chatListController extends Application {
 		stage.show();
 	}
 
-	// 한 번에 여러개의 채팅방 알람 끄기
+
 	public void handleBell(ActionEvent ae) throws IOException {
-		int num = 0; // 사용자가 선택한 채팅방 갯수로 변경
+		int num = 0; 
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("popup.fxml"));
 		Parent root = loader.load();
 
 		popupController controller = loader.getController();
-		controller.setMessage(num + " 개의 채팅방 알람을 끄시겠습니까?");
+		controller.setMessage(num + " 占쏙옙占쏙옙 채占시뱄옙 占싯띰옙占쏙옙 占쏙옙占시겠쏙옙占싹깍옙?");
 
 		Stage stage = new Stage();
 		stage.setScene(new Scene(root));
@@ -69,31 +69,25 @@ public class chatListController extends Application {
 	}
 
 	
-	// 채팅방 이름 변경
 	public void chatNameChanges(ActionEvent ae) {}
 	
-	// 채팅방 상단 고정
 	public void chatFix() {}
 	
-	// 채팅방 이름으로 채팅방 검색
 	public void chatSearch(ActionEvent ae) {
 
 	}
 
-	// 친구 선택 후 채팅방 생성
 	public void friendChat(ActionEvent ae) {
 	}
 
-	// 대화 시작 시 새로운 채팅방 추가
-	public chatListController() {
-		this.chatRooms = FXCollections.observableArrayList();
-	}
+//	public chatListController() {
+//		this.chatRooms = FXCollections.observableArrayList();
+//	}
 
-	public void addNewChat(String roomName, Image profileImage) {
-		this.chatRooms.add(new chatRoom(roomName, profileImage));
-	}
+//	public void addNewChat(String roomName, Image profileImage) {
+//		this.chatRooms.add(new chatRoom(roomName, profileImage));
+//	}
 
-	// 채팅방 정렬 (가장 마지막에 대화한 순서대로)
 	public void chatSort() {
 	}
 

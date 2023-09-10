@@ -54,180 +54,181 @@ import javafx.scene.Node;
 
 
 public class ProfileEditController {
-   @FXML
-   private Label errorLabel; 
-   @FXML
-   private ImageView goBack,profileImage,coverImage,changeCoverBtn,changeEveryBtn;
-   @FXML
-   private TextField nameChange,phoneChange;
-   private File selectedProfileFile;
-   private File selectedCoverFile;
-   
-   @FXML
-   private void changeEveryThing(MouseEvent event) throws IOException {
-      String inputName = nameChange.getText();
-      String inputTel = phoneChange.getText();
-      if(telCheck(inputTel) && nameCheck(inputName) ) {
-         String bucketName = "blossom-40039.appspot.com";  
-         String uid = User.getInstance().getUid();  
-         GoogleCredentials credentials;
-         try{
-            credentials = GoogleCredentials.fromStream(new FileInputStream("C:\\\\Program Files\\\\Java\\\\blossom-40039-firebase-adminsdk-heiuo-f52f3c2390.json"));
-         }catch(IOException e){
-            System.out.println("Failed to get credentials: "+e.getMessage());
-            return;
-         }
-         
-         if(selectedProfileFile != null){
-             uploadToFirebase(bucketName, uid, "profile_img/", selectedProfileFile, credentials);
-         }else{
-             System.out.println("No profile image to upload.");
-         }
-         
-         if(selectedCoverFile != null){
-             uploadToFirebase(bucketName, uid, "cover_img/", selectedCoverFile, credentials);
-         }else{
-             System.out.println("No cover image to upload.");
-         }
-         
-         FirebaseDatabase database = FirebaseDatabase.getInstance();
-         DatabaseReference ref = database.getReference("UserInfo").child(uid);
+	@FXML
+	private Label errorLabel; 
+	@FXML
+	private ImageView goBack,profileImage,coverImage,changeCoverBtn,changeEveryBtn;
+	@FXML
+	private TextField nameChange,phoneChange;
+	private File selectedProfileFile;
+	private File selectedCoverFile;
+	
+	
+	@FXML
+	private void changeEveryThing(MouseEvent event) throws IOException {
+		String inputName = nameChange.getText();
+		String inputTel = phoneChange.getText();
+		if(telCheck(inputTel) && nameCheck(inputName) ) {
+			String bucketName = "blossom-40039.appspot.com";  
+			String uid = User.getInstance().getUid();  
+			GoogleCredentials credentials;
+			try{
+				credentials = GoogleCredentials.fromStream(new FileInputStream("C:\\\\Program Files\\\\Java\\\\blossom-40039-firebase-adminsdk-heiuo-f52f3c2390.json"));
+			}catch(IOException e){
+				System.out.println("Failed to get credentials: "+e.getMessage());
+				return;
+			}
+			
+			if(selectedProfileFile != null){
+			    uploadToFirebase(bucketName, uid, "profile_img/", selectedProfileFile, credentials);
+			}else{
+			    System.out.println("No profile image to upload.");
+			}
+			
+			if(selectedCoverFile != null){
+			    uploadToFirebase(bucketName, uid, "cover_img/", selectedCoverFile, credentials);
+			}else{
+			    System.out.println("No cover image to upload.");
+			}
+			
+			FirebaseDatabase database = FirebaseDatabase.getInstance();
+			DatabaseReference ref = database.getReference("UserInfo").child(uid);
 
-         Map<String, Object> updates = new HashMap<>();
-         updates.put("nickName", inputName);
-         updates.put("tel", inputTel);
+			Map<String, Object> updates = new HashMap<>();
+			updates.put("nickName", inputName);
+			updates.put("tel", inputTel);
 
-         ApiFuture<Void> future = ref.updateChildrenAsync(updates);
-           goBack();
-      }
-      
-   }
+			ApiFuture<Void> future = ref.updateChildrenAsync(updates);
+	        goBack();
+		}
+		
+	}
 
-   private void uploadToFirebase(String bucketName, String uid, String pathPrefix,
-                                 File fileToUpload, GoogleCredentials credentials){
-      try{
-          String blobName = pathPrefix + uid;  
+	private void uploadToFirebase(String bucketName, String uid, String pathPrefix,
+	                              File fileToUpload, GoogleCredentials credentials){
+		try{
+		    String blobName = pathPrefix + uid;  
 
-          byte[] content = Files.readAllBytes(fileToUpload.toPath());
+		    byte[] content = Files.readAllBytes(fileToUpload.toPath());
 
-           Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-           BlobId blobId = BlobId.of(bucketName, blobName);
-           BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("image/jpeg").build();
+	        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+	        BlobId blobId = BlobId.of(bucketName, blobName);
+	        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("image/jpeg").build();
 
-           storage.create(blobInfo, content);
+	        storage.create(blobInfo, content);
 
-           System.out.printf("Uploaded %s image for user: %s\n", pathPrefix.replace("/", ""), uid);
-         
-       }catch(IOException e){
-          System.out.printf("Failed to upload %s image: %s\n", pathPrefix.replace("/", ""), e.getMessage());
-       }
-      
-   }
-   
-   @FXML
-   private void changeCover(MouseEvent event) {
-       FileChooser fileChooser = new FileChooser();
-       fileChooser.getExtensionFilters()
-               .add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
-       selectedCoverFile = fileChooser.showOpenDialog(null);
+	        System.out.printf("Uploaded %s image for user: %s\n", pathPrefix.replace("/", ""), uid);
+			
+	    }catch(IOException e){
+	    	System.out.printf("Failed to upload %s image: %s\n", pathPrefix.replace("/", ""), e.getMessage());
+	    }
+		
+	}
+	
+	@FXML
+	private void changeCover(MouseEvent event) {
+	    FileChooser fileChooser = new FileChooser();
+	    fileChooser.getExtensionFilters()
+	            .add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
+	    selectedCoverFile = fileChooser.showOpenDialog(null);
 
-       if (selectedCoverFile != null) {
-           try {
-              Image img=new Image(selectedCoverFile.toURI().toString());
-              
-              coverImage.setImage(img);  // Set the image to the coverImageView
-               
-           } catch (Exception e) {
-              System.out.println("Failed to load cover image: " + e.getMessage());
-           }
-           
-       } else {
-          System.out.println("No file selected");
-       }
-   }
-   
-   @FXML
-   private void changeProfile(MouseEvent event) {
-       FileChooser fileChooser = new FileChooser();
-       fileChooser.getExtensionFilters()
-               .add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
-       selectedProfileFile = fileChooser.showOpenDialog(null);
+	    if (selectedCoverFile != null) {
+	        try {
+		        Image img=new Image(selectedCoverFile.toURI().toString());
+		        
+		        coverImage.setImage(img);  // Set the image to the coverImageView
+	            
+	        } catch (Exception e) {
+	        	System.out.println("Failed to load cover image: " + e.getMessage());
+	        }
+	        
+	    } else {
+	    	System.out.println("No file selected");
+	    }
+	}
+	
+	@FXML
+	private void changeProfile(MouseEvent event) {
+	    FileChooser fileChooser = new FileChooser();
+	    fileChooser.getExtensionFilters()
+	            .add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
+	    selectedProfileFile = fileChooser.showOpenDialog(null);
 
-       if (selectedProfileFile != null) {
-           try {
-               BufferedImage originalImage = ImageIO.read(selectedProfileFile);
-               
-               int size = Math.min(originalImage.getWidth(), originalImage.getHeight());
-               
-               int x = (originalImage.getWidth() - size) / 2;
-               int y = (originalImage.getHeight() - size) / 2;
+	    if (selectedProfileFile != null) {
+	        try {
+	            BufferedImage originalImage = ImageIO.read(selectedProfileFile);
+	            
+	            int size = Math.min(originalImage.getWidth(), originalImage.getHeight());
+	            
+	            int x = (originalImage.getWidth() - size) / 2;
+	            int y = (originalImage.getHeight() - size) / 2;
 
-            BufferedImage squareImage = originalImage.getSubimage(x, y, size, size);
+				BufferedImage squareImage = originalImage.getSubimage(x, y, size, size);
 
-            File tempFile=File.createTempFile("tempImg",".png");
-            ImageIO.write(squareImage,"png",tempFile);
+				File tempFile=File.createTempFile("tempImg",".png");
+				ImageIO.write(squareImage,"png",tempFile);
 
-              Image img=new Image(tempFile.toURI().toString());
-              
-              profileImage.setImage(img);  // Set the image to the profileImageView
-               
-           } catch (IOException e) {
-              System.out.println("Failed to load profile image: " + e.getMessage());
-           }
-           
-       } else {
-          System.out.println("No file selected");
-       }
-   }
-   
-   private boolean telCheck(String inputTel) {
-         if(TextUtils.isEmpty(inputTel)) {
-            errorLabel.setText("¿¸»≠π¯»£∏¶ ¿‘∑¬«ÿ¡÷ººø‰!");
-            errorLabel.setStyle("-fx-text-fill: red;");
-            phoneChange.requestFocus();
-            return false;
-         }
-         
-         Pattern pattern = Pattern.compile("^01(?:0|1|[6-9])-(?:\\d{3}|\\d{4})-\\d{4}$");
-          Matcher matcher = pattern.matcher(inputTel);
+		        Image img=new Image(tempFile.toURI().toString());
+		        
+		        profileImage.setImage(img);  // Set the image to the profileImageView
+	            
+	        } catch (IOException e) {
+	        	System.out.println("Failed to load profile image: " + e.getMessage());
+	        }
+	        
+	    } else {
+	    	System.out.println("No file selected");
+	    }
+	}
+	
+	private boolean telCheck(String inputTel) {
+	      if(TextUtils.isEmpty(inputTel)) {
+	         errorLabel.setText("Ï†ÑÌôîÎ≤àÌò∏Î•º ÏûÖÎ†•Ìï¥Ï£ºÏÑ∏Ïöî!");
+	         errorLabel.setStyle("-fx-text-fill: red;");
+	         phoneChange.requestFocus();
+	         return false;
+	      }
+	      
+	      Pattern pattern = Pattern.compile("^01(?:0|1|[6-9])-(?:\\d{3}|\\d{4})-\\d{4}$");
+	       Matcher matcher = pattern.matcher(inputTel);
 
-          if (!matcher.find()) {
-              errorLabel.setText("¿Ø»ø«œ¡ˆ æ ¿∫ ¿¸»≠π¯»£ «¸Ωƒ¿‘¥œ¥Ÿ! (øπ: 010-1234-5678)");
-              errorLabel.setStyle("-fx-text-fill: red;");
-              phoneChange.requestFocus();
-              return false;
-         }
-          
-          return true;
-         
-      }
-   private boolean nameCheck(String inputName) {
-         
-         if(TextUtils.isEmpty(inputName)) {
-            errorLabel.setText("¥–≥◊¿”¿ª ¿‘∑¬«ÿ¡÷ººø‰!");
-            errorLabel.setStyle("-fx-text-fill: red;");
-            nameChange.requestFocus();
-            return false;
-         }   
-         Pattern pattern = Pattern.compile("^[A-Za-z∞°-∆R0-9]{3,16}$");
-         Matcher matcher = pattern.matcher(inputName);
-         if (!matcher.find()) {
-            errorLabel.setText("¿Ø»ø «œ¡ˆ æ ¿∫ ¥–≥◊¿”¿‘¥œ¥Ÿ!");  // ¿Ø»ø«œ¡ˆ æ ¿∏∏È ø°∑Ø ∏ﬁΩ√¡ˆ «•Ω√
-            errorLabel.setStyle("-fx-text-fill: red;");
-            nameChange.requestFocus();
-            return false;
-         } 
-         
-         return true;
-         
+	       if (!matcher.find()) {
+	           errorLabel.setText("Ïú†Ìö®ÌïòÏßÄ ÏïäÏùÄ Ï†ÑÌôîÎ≤àÌò∏ ÌòïÏãùÏûÖÎãàÎã§! (Ïòà: 010-1234-5678)");
+	           errorLabel.setStyle("-fx-text-fill: red;");
+	           phoneChange.requestFocus();
+	           return false;
+	      }
+	       
+	       return true;
+	      
+	   }
+	private boolean nameCheck(String inputName) {
+	      
+	      if(TextUtils.isEmpty(inputName)) {
+	         errorLabel.setText("ÎãâÎÑ§ÏûÑÏùÑ ÏûÖÎ†•Ìï¥Ï£ºÏÑ∏Ïöî!");
+	         errorLabel.setStyle("-fx-text-fill: red;");
+	         nameChange.requestFocus();
+	         return false;
+	      }   
+	      Pattern pattern = Pattern.compile("^[A-Za-zÍ∞Ä-Ìû£0-9]{3,16}$");
+	      Matcher matcher = pattern.matcher(inputName);
+	      if (!matcher.find()) {
+	         errorLabel.setText("Ïú†Ìö® ÌïòÏßÄ ÏïäÏùÄ ÎãâÎÑ§ÏûÑÏûÖÎãàÎã§!");  // Ïú†Ìö®ÌïòÏßÄ ÏïäÏúºÎ©¥ ÏóêÎü¨ Î©îÏãúÏßÄ ÌëúÏãú
+	         errorLabel.setStyle("-fx-text-fill: red;");
+	         nameChange.requestFocus();
+	         return false;
+	      } 
+	      
+	      return true;
+	      
 
-      }
-   
-   
-   
-   //µ⁄∑Œ∞°±‚ πˆ∆∞
-   private void goBack() throws IOException {
-      FXMLLoader loader = new FXMLLoader(getClass().getResource("profile.fxml"));
+	   }
+	
+	
+	
+	//Îí§Î°úÍ∞ÄÍ∏∞ Î≤ÑÌäº
+	private void goBack() throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("profile.fxml"));
         Parent root = loader.load();
 
         Scene scene = new Scene(root);
@@ -235,114 +236,114 @@ public class ProfileEditController {
         Stage stage = (Stage) goBack.getScene().getWindow();
         stage.setScene(scene);
         stage.show();
-   }
-   
-   
-   @FXML
+	}
+	
+	
+	@FXML
     public void initialize() {
-      
-      goBack.setOnMouseClicked(event -> {
-             try {
-            goBack();
-         } catch (IOException e) {
-            e.printStackTrace();
-         }
-           });
-      Platform.runLater(() -> {
-         double centerX = profileImage.getFitWidth() / 2;
-         double centerY = profileImage.getFitHeight() / 2;
-         double radius = Math.min(centerX, centerY);
-         Circle clip = new Circle(centerX, centerY, radius);
-         profileImage.setClip(clip);
-      });
-       String currentUid = User.getInstance().getUid();
-       System.out.println("∑Œ±◊¿Œ »ƒ : " + currentUid);
+		
+		goBack.setOnMouseClicked(event -> {
+	          try {
+				goBack();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	        });
+		Platform.runLater(() -> {
+			double centerX = profileImage.getFitWidth() / 2;
+			double centerY = profileImage.getFitHeight() / 2;
+			double radius = Math.min(centerX, centerY);
+			Circle clip = new Circle(centerX, centerY, radius);
+			profileImage.setClip(clip);
+		});
+	    String currentUid = User.getInstance().getUid();
+	    System.out.println("Î°úÍ∑∏Ïù∏ ÌõÑ : " + currentUid);
 
-       DatabaseReference ref = FirebaseDatabase.getInstance().getReference("UserInfo");
+	    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("UserInfo");
 
-       ref.child(currentUid).addListenerForSingleValueEvent(new ValueEventListener() {
-           @Override
-           public void onDataChange(DataSnapshot dataSnapshot) {
-               if (dataSnapshot.exists()) {
-                   UserInfo userInfo = dataSnapshot.getValue(UserInfo.class);
-                   String nickName = userInfo.getNickName();  // getNickName ∏ﬁº“µÂ∞° UserInfo ≈¨∑°Ω∫ø° ¡∏¿Á«ÿæﬂ «’¥œ¥Ÿ.
-                   String cTel = userInfo.getTel();
-                   nameChange.setText(nickName);
-                   phoneChange.setText(cTel);
-               }
-           }
+	    ref.child(currentUid).addListenerForSingleValueEvent(new ValueEventListener() {
+	        @Override
+	        public void onDataChange(DataSnapshot dataSnapshot) {
+	            if (dataSnapshot.exists()) {
+	                UserInfo userInfo = dataSnapshot.getValue(UserInfo.class);
+	                String nickName = userInfo.getNickName();  // getNickName Î©îÏÜåÎìúÍ∞Ä UserInfo ÌÅ¥ÎûòÏä§Ïóê Ï°¥Ïû¨Ìï¥Ïïº Ìï©ÎãàÎã§.
+	                String cTel = userInfo.getTel();
+	                nameChange.setText(nickName);
+	                phoneChange.setText(cTel);
+	            }
+	        }
 
-           @Override
-           public void onCancelled(DatabaseError databaseError) {
-               // « ø‰«— ∞ÊøÏ µ•¿Ã≈Õ∫£¿ÃΩ∫ ø¿∑˘ √≥∏Æ
-           }
-       });
-       String bucketName = "blossom-40039.appspot.com";
-       String imageUrl = "https://firebasestorage.googleapis.com/v0/b/" + bucketName + "/o/" +
-                URLEncoder.encode("profile_img/" + currentUid, StandardCharsets.UTF_8) +
-                "?alt=media";
-       
-       String coverUrl = "https://firebasestorage.googleapis.com/v0/b/" + bucketName + "/o/" +
-                URLEncoder.encode("cover_img/" + currentUid, StandardCharsets.UTF_8) +
-                "?alt=media";
-       
-            Image cImage;
-            
-            try (InputStream in = new URL(imageUrl).openStream()) {
-                 Image originalImage = new Image(in);
-                 PixelReader reader = originalImage.getPixelReader();
+	        @Override
+	        public void onCancelled(DatabaseError databaseError) {
+	            // ÌïÑÏöîÌïú Í≤ΩÏö∞ Îç∞Ïù¥ÌÑ∞Î≤†Ïù¥Ïä§ Ïò§Î•ò Ï≤òÎ¶¨
+	        }
+	    });
+	    String bucketName = "blossom-40039.appspot.com";
+	    String imageUrl = "https://firebasestorage.googleapis.com/v0/b/" + bucketName + "/o/" +
+	    	      URLEncoder.encode("profile_img/" + currentUid, StandardCharsets.UTF_8) +
+	    	      "?alt=media";
+	    
+	    String coverUrl = "https://firebasestorage.googleapis.com/v0/b/" + bucketName + "/o/" +
+	    	      URLEncoder.encode("cover_img/" + currentUid, StandardCharsets.UTF_8) +
+	    	      "?alt=media";
+	    
+	    	  Image cImage;
+	    	  
+	    	  try (InputStream in = new URL(imageUrl).openStream()) {
+	    		    Image originalImage = new Image(in);
+	    		    PixelReader reader = originalImage.getPixelReader();
 
-                 int size = (int) Math.min(originalImage.getWidth(), originalImage.getHeight());
+	    		    int size = (int) Math.min(originalImage.getWidth(), originalImage.getHeight());
 
-                 int x = (int) ((originalImage.getWidth() - size) / 2);
-                 int y = (int) ((originalImage.getHeight() - size) / 2);
+	    		    int x = (int) ((originalImage.getWidth() - size) / 2);
+	    		    int y = (int) ((originalImage.getHeight() - size) / 2);
 
-                WritableImage squareImage = new WritableImage(size, size);
-                PixelWriter writer = squareImage.getPixelWriter();
+	    			WritableImage squareImage = new WritableImage(size, size);
+	    			PixelWriter writer = squareImage.getPixelWriter();
 
-                for (int i = 0; i < size; i++) {
-                   for (int j = 0; j < size; j++) {
-                      writer.setColor(i, j, reader.getColor(x + i, y + j));
-                   }
-                }
-                profileImage.setImage(squareImage);
+	    			for (int i = 0; i < size; i++) {
+	    				for (int j = 0; j < size; j++) {
+	    					writer.setColor(i, j, reader.getColor(x + i, y + j));
+	    				}
+	    			}
+	    			profileImage.setImage(squareImage);
 
-                System.out.println("«¡∑Œ«  ªÁ¡¯ ∞°¡Æø»: " + currentUid);
-             }catch (IOException e) {
-               System.out.println("«¡∑Œ«  ªÁ¡¯ ∫“∑Øø¿±‚ Ω«∆–, ±‚∫ª «¡∑Œ«  ªÁ¡¯ ∫“∑Øø¿¥¬ ¡ﬂ: " + e.getMessage());
+	    			System.out.println("ÌîÑÎ°úÌïÑ ÏÇ¨ÏßÑ Í∞ÄÏ†∏Ïò¥: " + currentUid);
+	    		}catch (IOException e) {
+	    		  System.out.println("ÌîÑÎ°úÌïÑ ÏÇ¨ÏßÑ Î∂àÎü¨Ïò§Í∏∞ Ïã§Ìå®, Í∏∞Î≥∏ ÌîÑÎ°úÌïÑ ÏÇ¨ÏßÑ Î∂àÎü¨Ïò§Îäî Ï§ë: " + e.getMessage());
 
-                 String defaultImageUrl = "https://firebasestorage.googleapis.com/v0/b/" + bucketName + "/o/" +
-                         URLEncoder.encode("profile_img/default_image.jpg", StandardCharsets.UTF_8) +
-                         "?alt=media";
+	    		    String defaultImageUrl = "https://firebasestorage.googleapis.com/v0/b/" + bucketName + "/o/" +
+	    		            URLEncoder.encode("profile_img/default_image.jpg", StandardCharsets.UTF_8) +
+	    		            "?alt=media";
 
-                 try (InputStream inDefault = new URL(defaultImageUrl).openStream()) {
-                     Image defaultImage = new Image(inDefault);
-                     profileImage.setImage(defaultImage);
+	    		    try (InputStream inDefault = new URL(defaultImageUrl).openStream()) {
+	    		        Image defaultImage = new Image(inDefault);
+	    		        profileImage.setImage(defaultImage);
 
-                     System.out.println("±‚∫ª «¡∑Œ«  ªÁ¡¯ ∞°¡Æø»");
-                     
-                 } catch (IOException ex) {
-                     System.out.println("±‚∫ª «¡∑Œ«  ªÁ¡¯ ∞°¡Æø¿±‚ Ω«∆–: " + ex.getMessage());
-                 }
-            }
-            try(InputStream coverIn = new URL(coverUrl).openStream()){
-               cImage = new Image(coverIn, coverImage.getFitWidth(), coverImage.getFitHeight(), true, true);
-                 coverImage.setImage(cImage);
-             }catch (IOException e){
-                System.out.println("ƒøπˆ¿ÃπÃ¡ˆ ∫“∑Øø¿±‚ Ω«∆–,±‚∫ª ƒøπˆ ¿ÃπÃ¡ˆ ∫“∑Øø¿¥¬ ¡ﬂ: " + e.getMessage());
-                String defaultCoverImageUrl = "https://firebasestorage.googleapis.com/v0/b/" + bucketName + "/o/" +
-                         URLEncoder.encode("cover_img/default_image_cover.jpg", StandardCharsets.UTF_8) +
-                         "?alt=media";
-                try (InputStream inDefault = new URL(defaultCoverImageUrl).openStream()) {
-                     Image defaultImage = new Image(inDefault);
-                     coverImage.setImage(defaultImage);
+	    		        System.out.println("Í∏∞Î≥∏ ÌîÑÎ°úÌïÑ ÏÇ¨ÏßÑ Í∞ÄÏ†∏Ïò¥");
+	    		        
+	    		    } catch (IOException ex) {
+	    		        System.out.println("Í∏∞Î≥∏ ÌîÑÎ°úÌïÑ ÏÇ¨ÏßÑ Í∞ÄÏ†∏Ïò§Í∏∞ Ïã§Ìå®: " + ex.getMessage());
+	    		    }
+	    	  }
+	    	  try(InputStream coverIn = new URL(coverUrl).openStream()){
+	    		  cImage = new Image(coverIn, coverImage.getFitWidth(), coverImage.getFitHeight(), true, true);
+	    		    coverImage.setImage(cImage);
+    	      }catch (IOException e){
+    	    	  System.out.println("Ïª§Î≤ÑÏù¥ÎØ∏ÏßÄ Î∂àÎü¨Ïò§Í∏∞ Ïã§Ìå®,Í∏∞Î≥∏ Ïª§Î≤Ñ Ïù¥ÎØ∏ÏßÄ Î∂àÎü¨Ïò§Îäî Ï§ë: " + e.getMessage());
+    	    	  String defaultCoverImageUrl = "https://firebasestorage.googleapis.com/v0/b/" + bucketName + "/o/" +
+	    		            URLEncoder.encode("cover_img/default_image_cover.jpg", StandardCharsets.UTF_8) +
+	    		            "?alt=media";
+    	    	  try (InputStream inDefault = new URL(defaultCoverImageUrl).openStream()) {
+	    		        Image defaultImage = new Image(inDefault);
+	    		        coverImage.setImage(defaultImage);
 
-                     System.out.println("±‚∫ª ƒøπˆ ¿ÃπÃ¡ˆ ∫“∑Øø»");
-                     
-                 } catch (IOException ex) {
-                     System.out.println("±‚∫ª ƒøπˆ ¿ÃπÃ¡ˆ ∞°¡Æø¿±‚ Ω«∆–: " + ex.getMessage());
-                 }
-             }
+	    		        System.out.println("Í∏∞Î≥∏ Ïª§Î≤Ñ Ïù¥ÎØ∏ÏßÄ Î∂àÎü¨Ïò¥");
+	    		        
+	    		    } catch (IOException ex) {
+	    		        System.out.println("Í∏∞Î≥∏ Ïª§Î≤Ñ Ïù¥ÎØ∏ÏßÄ Í∞ÄÏ†∏Ïò§Í∏∞ Ïã§Ìå®: " + ex.getMessage());
+	    		    }
+    	      }
     }
 
 }

@@ -44,357 +44,357 @@ import javafx.util.Callback;
 
 public class FriendPlusController {
 
-   @FXML
-   private ListView<UserInfo> listView;
-
-   private DatabaseReference databaseReference;
-   @FXML
-   private ImageView SFRID,profileImage,Flist;
-   @FXML
-   private TextField FriendPlus;
-   @FXML
-   private Label nameLabel;
-   @FXML
-   private Text name;
-
-   @FXML
-   private void searchBtn(MouseEvent event) {
-      String searchText = FriendPlus.getText().trim().toLowerCase(); // ÀÔ·ÂµÈ °Ë»ö¾î¸¦ ¼Ò¹®ÀÚ·Î º¯È¯
-
-      ObservableList<UserInfo> filteredList = FXCollections.observableArrayList();
-
-      for (UserInfo userInfo : listView.getItems()) {
-         if (userInfo.getName().toLowerCase().contains(searchText)) {
-            filteredList.add(userInfo);
-         }
-      }
-
-      if (searchText.isEmpty()) {
-         // °Ë»ö¾î°¡ ºñ¾î ÀÖÀ¸¸é ¸ğµç µ¥ÀÌÅÍ¸¦ Ç¥½Ã
-         loadOriginalData();
-      } else {
-         listView.setItems(filteredList);
-      }
-   }
-
-   @FXML
-   private void listBtn(MouseEvent event) {
-      try {
-         FXMLLoader loader = new FXMLLoader(getClass().getResource("FriendListController.fxml"));
-         Parent root = loader.load();
-         Scene scene = new Scene(root);
-
-         Stage stage = new Stage(); // »õ·Î¿î Stage »ı¼º
-         stage.setScene(scene);
-         stage.show();
-
-      } catch (IOException e) {
-         e.printStackTrace();
-      }
-   }
-
-   @FXML
-   private void initialize() {
-      // µ¥ÀÌÅÍº£ÀÌ½º ÂüÁ¶ ¼³Á¤
-      FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-      databaseReference = firebaseDatabase.getReference("UserInfo");
-      FriendPlus.setVisible(false);
-      SFRID.setOnMouseClicked(event -> {
-           // ÀÌ¹ÌÁö°¡ Å¬¸¯µÇ¸é °Ë»öÃ¢À» º¸¿©Áİ´Ï´Ù.
-           FriendPlus.setVisible(!FriendPlus.isVisible());
-       });
-      Platform.runLater(() -> {
-          profileImage.setPreserveRatio(true); // Add this line
-          double centerX = profileImage.getFitWidth() / 2;
-          double centerY = profileImage.getFitHeight() / 2;
-          double radius = Math.min(centerX, centerY);
-          Circle clip = new Circle(centerX, centerY, radius);
-          profileImage.setClip(clip);
-      });
-
-      String bucketName = "blossom-40039.appspot.com";
-      String currentUid = User.getInstance().getUid();
-      String imageUrl = "https://firebasestorage.googleapis.com/v0/b/" + bucketName + "/o/"
-            + URLEncoder.encode("profile_img/" + currentUid, StandardCharsets.UTF_8) + "?alt=media";
-      Image image;
-
-      try (InputStream in = new URL(imageUrl).openStream()) {
-         image = new Image(in);
-         profileImage.setImage(image);
-
-         System.out.println("Loaded profile image for user: " + currentUid);
-
-      } catch (IOException e) {
-         System.out.println("Failed to load profile image: " + e.getMessage());
-
-         String defaultImageUrl = "https://firebasestorage.googleapis.com/v0/b/" + bucketName + "/o/"
-               + URLEncoder.encode("profile_img/default_image.jpg", StandardCharsets.UTF_8) + "?alt=media";
-
-         try (InputStream inDefault = new URL(defaultImageUrl).openStream()) {
-            Image defaultImage = new Image(inDefault);
-            profileImage.setImage(defaultImage);
-
-            System.out.println("Loaded default profile image");
-
-         } catch (IOException ex) {
-            System.out.println("Failed to load default profile image: " + ex.getMessage());
-         }
-      }
-
-      databaseReference.child(currentUid).addListenerForSingleValueEvent(new ValueEventListener() {
-         @Override
-         public void onDataChange(DataSnapshot dataSnapshot) {
-            if (dataSnapshot.exists()) {
-               UserInfo userInfo = dataSnapshot.getValue(UserInfo.class);
-               String Name = userInfo.getName(); // getNickName ¸Ş¼Òµå°¡ UserInfo Å¬·¡½º¿¡ Á¸ÀçÇØ¾ß ÇÕ´Ï´Ù.
-               name.setText(Name);
-            }
-         }
-
-         @Override
-         public void onCancelled(DatabaseError databaseError) {
-            databaseError.toException().printStackTrace();
-         }
-      });
-
-      listView.setCellFactory(new Callback<ListView<UserInfo>, ListCell<UserInfo>>() {
-             @Override
-             public ListCell<UserInfo> call(ListView<UserInfo> param) {
-                 return new ListCell<UserInfo>() {
-                    private final ImageView profileImageView = new ImageView();
-                     private final Label nameLabel = new Label();
-                     private final Button addButton = new Button("Ãß°¡");
-                     private final Region spacer = new Region();
-
-                     //private final HBox content = new HBox(profileImageView,nameLabel, spacer, addButton);
-                     
-                     private final HBox content = new HBox(profileImageView, nameLabel, spacer,addButton);
-                     { 
-                     // Initialize the imageView.
-                         profileImageView.setFitHeight(40);  // You can adjust this value.
-                         profileImageView.setFitWidth(40);   // You can adjust this value.
-                         profileImageView.setPreserveRatio(true);
-                         
-                         double centerX = profileImageView.getFitWidth() / 2;
-                         double centerY = profileImageView.getFitHeight() / 2;
-                         double radius = Math.min(centerX, centerY);
-                         
-                         Circle clip = new Circle(centerX, centerY, radius);
-                         
-                         profileImageView.setClip(clip);
-                         // Adjust the position of nameLabel
-                           VBox nameContainer = new VBox(nameLabel); 
-                           VBox.setMargin(nameLabel, new Insets(10.0)); // Add a margin to move nameLabel down by 10 pixels
-                           
-                           content.getChildren().add(1,nameContainer); // Insert nameContainer at index 1 (between imageView and button)
-   
-                           HBox.setHgrow(spacer, Priority.ALWAYS); // Make the spacer take up all remaining space
-   
-                           content.setAlignment(Pos.CENTER_LEFT);
-                           content.setSpacing(12);
-                           
-                           addButton.setOnAction(event -> {
-                               UserInfo selectedUser = getItem();
-                               System.out.println("Selected user: " + selectedUser.getName());
-
-                               if (selectedUser != null && selectedUser.getUid() != null) {
-
-                                   System.out.println("Added " + selectedUser.getName());
-
-                                   DatabaseReference friendRef =
-                                       FirebaseDatabase.getInstance().getReference("friends")
-                                           .child(User.getInstance().getUid())
-                                           .child(selectedUser.getUid()); 
-
-                                   ApiFuture<Void> future =
-                                       friendRef.setValueAsync(true);
-
-                                   future.addListener(new Runnable() {
-
-                                       @Override
-                                       public void run() {
-
-                                           try {
-
-                                               future.get();
-
-                                               Platform.runLater(new Runnable() {
-
-                                                   @Override
-                                                   public void run() {
-                                                       System.out.println("Data saved successfully.");
-                                                       // Ä£±¸¸¦ Ãß°¡ÇÑ ÈÄ ÇöÀç º¸¿©Áö°í ÀÖ´Â ¸®½ºÆ®¿¡¼­ Á¦°Å
-                                                       listView.getItems().remove(selectedUser);
-                                                   }
-                                               });
-                                           } catch (InterruptedException | ExecutionException e) {
-
-                                               Platform.runLater(new Runnable() {
-
-                                                   @Override
-                                                   public void run() {
-                                                       System.out.println(
-                                                           "Data could not be saved: "
-                                                               + e.getMessage());
-                                                   }
-                                               });
-                                           }
-                                       }
-                                   }, MoreExecutors.directExecutor());
-                               }
-
-                               DatabaseReference friendsRef =
-                                   FirebaseDatabase.getInstance()
-                                       .getReference("friends")
-                                       .child(User.getInstance().getUid());
-
-                               friendsRef.addValueEventListener(new ValueEventListener() {
-                                   
-                                   @Override
-                                   public void onDataChange(DataSnapshot dataSnapshot) {
-                                       
-                                       loadOriginalData();  
-                                   }
-
-                                   @Override
-                                   public void onCancelled(DatabaseError databaseError) {}
-                               });
-
-                           }); 
-                               FriendPlus.textProperty().addListener(
-                                    (observable, oldValue, newValue) -> { 
-                                        handleTextFieldChange(newValue);  
-                                    });
-                             loadOriginalData();
-                     }
-
-                     @Override
-                    protected void updateItem(UserInfo item, boolean empty) {
-                        super.updateItem(item, empty);
-
-                        if (item == null || empty) {
-                            setGraphic(null);
-                        } else {
-                       String bucketName = "blossom-40039.appspot.com";
-                       String imageUrl =
-                           "https://firebasestorage.googleapis.com/v0/b/" + bucketName + "/o/"
-                               + URLEncoder.encode("profile_img/" + item.getUid(), StandardCharsets.UTF_8)
-                               + "?alt=media";
-
-                       Image image;
-
-                       try (InputStream in = new URL(imageUrl).openStream()) {
-                           image = new Image(in);
-                           
-                           Platform.runLater(() -> profileImageView.setImage(image));
-                           
-                           System.out.println("Loaded profile image for user: " + item.getUid());
-
-                       } catch (IOException e) {
-
-                           System.out.println("Failed to load profile image: " + e.getMessage());
-
-                      String defaultImageUrl =
-                          "https://firebasestorage.googleapis.com/v0/b/" + bucketName + "/o/"
-                              + URLEncoder.encode("profile_img/default_image.jpg", StandardCharsets.UTF_8)
-                              + "?alt=media";
-
-                      try (InputStream inDefault = new URL(defaultImageUrl).openStream()) {
-
-                          Image defaultImage = new Image(inDefault);
-
-                          Platform.runLater(() -> { 
-                         if (!empty) { 
-                             profileImageView.setImage(defaultImage);
-                         } 
-                          });
-
-                          System.out.println("Loaded default profile image");
-
-                      } catch (IOException ex) {
-
-                          System.out.println("Failed to load default profile image: " + ex.getMessage());
-                      }
-                       }
-
-                       nameLabel.setText(item.getName());
-                       setGraphic(content);
-                        }
-                    }
-                     
-                     
-                 };
-             }
-         });
-
-           loadOriginalData();
-       }
-
-   private ObservableList<UserInfo> originalData; // ÃÊ±â Ä£±¸ ¸ñ·ÏÀ» ÀúÀåÇÒ º¯¼ö
-
-   private void loadOriginalData() {
-       DatabaseReference friendsRef = FirebaseDatabase.getInstance().getReference("friends").child(User.getInstance().getUid());
-       friendsRef.addValueEventListener(new ValueEventListener() {
-           @Override
-           public void onDataChange(DataSnapshot friendSnapshot) {
-               // ÇöÀç »ç¿ëÀÚÀÇ Ä£±¸ ¸ñ·ÏÀ» °¡Á®¿É´Ï´Ù.
-               List<String> friendList = new ArrayList<>();
-               for (DataSnapshot snapshot : friendSnapshot.getChildren()) {
-                   friendList.add(snapshot.getKey());
-               }
-
-               databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                   @Override
-                   public void onDataChange(DataSnapshot dataSnapshot) {
-                       ObservableList<UserInfo> items = FXCollections.observableArrayList();
-
-                       for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                           UserInfo userInfo = userSnapshot.getValue(UserInfo.class);
-                           
-                           if (!userInfo.getUid().equals(User.getInstance().getUid()) && !friendList.contains(userInfo.getUid())) { 
-                               items.add(userInfo);
-                           }
-                       }
-
-                       listView.setItems(items); // Set the items of the ListView
-
-                       if (originalData == null) {  
-                           originalData = FXCollections.observableArrayList();
-                       }
-
-                       originalData.clear();
-                       originalData.addAll(items);
-
-                   }
-
-                   @Override
-                   public void onCancelled(DatabaseError databaseError) {}
-              });
-          }
-
-          @Override
-          public void onCancelled(DatabaseError error) {}
-      });
-   }
-
-   // ÀÌÀü handleTextFieldChange ¸Ş¼Òµå¸¦ ¼öÁ¤ÇÏ¿© »õ·Î¿î ¸Ş¼Òµå·Î ¸¸µì´Ï´Ù.
-   private void handleTextFieldChange(String searchText) {
-      searchText = searchText.trim().toLowerCase();
-      ObservableList<UserInfo> filteredList = FXCollections.observableArrayList();
-
-      for (UserInfo userInfo : originalData) {
-         // ÀÌ¸§À» ¼Ò¹®ÀÚ·Î º¯È¯ÇÑ µÚ °Ë»ö¾î°¡ Æ÷ÇÔµÇ¾î ÀÖ´ÂÁö È®ÀÎ
-         if (userInfo.getName().toLowerCase().contains(searchText)) {
-            filteredList.add(userInfo);
-         }
-      }
-
-      if (searchText.isEmpty()) {
-         // ÅØ½ºÆ® ÇÊµå°¡ ºñ¾î ÀÖÀ¸¸é originalData¸¦ ´Ù½Ã ¼³Á¤ÇÏ¿© ÃÊ±â Ä£±¸ ¸ñ·ÏÀ» Ç¥½Ã
-         listView.setItems(originalData);
-      } else {
-         listView.setItems(filteredList);
-      }
-   }
+	@FXML
+	private ListView<UserInfo> listView;
+
+	private DatabaseReference databaseReference;
+	@FXML
+	private ImageView SFRID,profileImage,Flist;
+	@FXML
+	private TextField FriendPlus;
+	@FXML
+	private Label nameLabel;
+	@FXML
+	private Text name;
+
+	@FXML
+	private void searchBtn(MouseEvent event) {
+		String searchText = FriendPlus.getText().trim().toLowerCase(); // ì…ë ¥ëœ ê²€ìƒ‰ì–´ë¥¼ ì†Œë¬¸ìë¡œ ë³€í™˜
+
+		ObservableList<UserInfo> filteredList = FXCollections.observableArrayList();
+
+		for (UserInfo userInfo : listView.getItems()) {
+			if (userInfo.getName().toLowerCase().contains(searchText)) {
+				filteredList.add(userInfo);
+			}
+		}
+
+		if (searchText.isEmpty()) {
+			// ê²€ìƒ‰ì–´ê°€ ë¹„ì–´ ìˆìœ¼ë©´ ëª¨ë“  ë°ì´í„°ë¥¼ í‘œì‹œ
+			loadOriginalData();
+		} else {
+			listView.setItems(filteredList);
+		}
+	}
+
+	@FXML
+	private void listBtn(MouseEvent event) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("FriendListController.fxml"));
+			Parent root = loader.load();
+			Scene scene = new Scene(root);
+
+			Stage stage = new Stage(); // ìƒˆë¡œìš´ Stage ìƒì„±
+			stage.setScene(scene);
+			stage.show();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@FXML
+	private void initialize() {
+		// ë°ì´í„°ë² ì´ìŠ¤ ì°¸ì¡° ì„¤ì •
+		FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+		databaseReference = firebaseDatabase.getReference("UserInfo");
+		FriendPlus.setVisible(false);
+		SFRID.setOnMouseClicked(event -> {
+	        // ì´ë¯¸ì§€ê°€ í´ë¦­ë˜ë©´ ê²€ìƒ‰ì°½ì„ ë³´ì—¬ì¤ë‹ˆë‹¤.
+	        FriendPlus.setVisible(!FriendPlus.isVisible());
+	    });
+		Platform.runLater(() -> {
+		    profileImage.setPreserveRatio(true); // Add this line
+		    double centerX = profileImage.getFitWidth() / 2;
+		    double centerY = profileImage.getFitHeight() / 2;
+		    double radius = Math.min(centerX, centerY);
+		    Circle clip = new Circle(centerX, centerY, radius);
+		    profileImage.setClip(clip);
+		});
+
+		String bucketName = "blossom-40039.appspot.com";
+		String currentUid = User.getInstance().getUid();
+		String imageUrl = "https://firebasestorage.googleapis.com/v0/b/" + bucketName + "/o/"
+				+ URLEncoder.encode("profile_img/" + currentUid, StandardCharsets.UTF_8) + "?alt=media";
+		Image image;
+
+		try (InputStream in = new URL(imageUrl).openStream()) {
+			image = new Image(in);
+			profileImage.setImage(image);
+
+			System.out.println("Loaded profile image for user: " + currentUid);
+
+		} catch (IOException e) {
+			System.out.println("Failed to load profile image: " + e.getMessage());
+
+			String defaultImageUrl = "https://firebasestorage.googleapis.com/v0/b/" + bucketName + "/o/"
+					+ URLEncoder.encode("profile_img/default_image.jpg", StandardCharsets.UTF_8) + "?alt=media";
+
+			try (InputStream inDefault = new URL(defaultImageUrl).openStream()) {
+				Image defaultImage = new Image(inDefault);
+				profileImage.setImage(defaultImage);
+
+				System.out.println("Loaded default profile image");
+
+			} catch (IOException ex) {
+				System.out.println("Failed to load default profile image: " + ex.getMessage());
+			}
+		}
+
+		databaseReference.child(currentUid).addListenerForSingleValueEvent(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				if (dataSnapshot.exists()) {
+					UserInfo userInfo = dataSnapshot.getValue(UserInfo.class);
+					String Name = userInfo.getName(); // getNickName ë©”ì†Œë“œê°€ UserInfo í´ë˜ìŠ¤ì— ì¡´ì¬í•´ì•¼ í•©ë‹ˆë‹¤.
+					name.setText(Name);
+				}
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+				databaseError.toException().printStackTrace();
+			}
+		});
+
+		listView.setCellFactory(new Callback<ListView<UserInfo>, ListCell<UserInfo>>() {
+		       @Override
+		       public ListCell<UserInfo> call(ListView<UserInfo> param) {
+		           return new ListCell<UserInfo>() {
+		        	   private final ImageView profileImageView = new ImageView();
+		               private final Label nameLabel = new Label();
+		               private final Button addButton = new Button("ì¶”ê°€");
+		               private final Region spacer = new Region();
+
+		               //private final HBox content = new HBox(profileImageView,nameLabel, spacer, addButton);
+		               
+		               private final HBox content = new HBox(profileImageView, nameLabel, spacer,addButton);
+		               { 
+		            	// Initialize the imageView.
+		                   profileImageView.setFitHeight(40);  // You can adjust this value.
+		                   profileImageView.setFitWidth(40);   // You can adjust this value.
+		                   profileImageView.setPreserveRatio(true);
+		                   
+		                   double centerX = profileImageView.getFitWidth() / 2;
+		                   double centerY = profileImageView.getFitHeight() / 2;
+		                   double radius = Math.min(centerX, centerY);
+		                   
+		                   Circle clip = new Circle(centerX, centerY, radius);
+		                   
+		                   profileImageView.setClip(clip);
+			                // Adjust the position of nameLabel
+			               	VBox nameContainer = new VBox(nameLabel); 
+			               	VBox.setMargin(nameLabel, new Insets(10.0)); // Add a margin to move nameLabel down by 10 pixels
+			               	
+			               	content.getChildren().add(1,nameContainer); // Insert nameContainer at index 1 (between imageView and button)
+	
+			               	HBox.setHgrow(spacer, Priority.ALWAYS); // Make the spacer take up all remaining space
+	
+			               	content.setAlignment(Pos.CENTER_LEFT);
+			               	content.setSpacing(12);
+			               	
+			               	addButton.setOnAction(event -> {
+			               	    UserInfo selectedUser = getItem();
+			               	    System.out.println("Selected user: " + selectedUser.getName());
+
+			               	    if (selectedUser != null && selectedUser.getUid() != null) {
+
+			               	        System.out.println("Added " + selectedUser.getName());
+
+			               	        DatabaseReference friendRef =
+			               	            FirebaseDatabase.getInstance().getReference("friends")
+			               	                .child(User.getInstance().getUid())
+			               	                .child(selectedUser.getUid()); 
+
+			               	        ApiFuture<Void> future =
+			               	            friendRef.setValueAsync(true);
+
+			               	        future.addListener(new Runnable() {
+
+			               	            @Override
+			               	            public void run() {
+
+			               	                try {
+
+			               	                    future.get();
+
+			               	                    Platform.runLater(new Runnable() {
+
+			               	                        @Override
+			               	                        public void run() {
+			               	                            System.out.println("Data saved successfully.");
+			               	                            // ì¹œêµ¬ë¥¼ ì¶”ê°€í•œ í›„ í˜„ì¬ ë³´ì—¬ì§€ê³  ìˆëŠ” ë¦¬ìŠ¤íŠ¸ì—ì„œ ì œê±°
+			               	                            listView.getItems().remove(selectedUser);
+			               	                        }
+			               	                    });
+			               	                } catch (InterruptedException | ExecutionException e) {
+
+			               	                    Platform.runLater(new Runnable() {
+
+			               	                        @Override
+			               	                        public void run() {
+			               	                            System.out.println(
+			               	                                "Data could not be saved: "
+			               	                                    + e.getMessage());
+			               	                        }
+			               	                    });
+			               	                }
+			               	            }
+			               	        }, MoreExecutors.directExecutor());
+			               	    }
+
+			               	    DatabaseReference friendsRef =
+			               	        FirebaseDatabase.getInstance()
+			               	            .getReference("friends")
+			               	            .child(User.getInstance().getUid());
+
+			               	    friendsRef.addValueEventListener(new ValueEventListener() {
+			               	        
+			               	        @Override
+			               	        public void onDataChange(DataSnapshot dataSnapshot) {
+			               	            
+			               	            loadOriginalData();  
+			               	        }
+
+			               	        @Override
+			               	        public void onCancelled(DatabaseError databaseError) {}
+			               	    });
+
+			               	}); 
+			               	    FriendPlus.textProperty().addListener(
+			               	         (observable, oldValue, newValue) -> { 
+			               	             handleTextFieldChange(newValue);  
+			               	         });
+		                       loadOriginalData();
+		               }
+
+		               @Override
+		       	    protected void updateItem(UserInfo item, boolean empty) {
+		       	        super.updateItem(item, empty);
+
+		       	        if (item == null || empty) {
+		       	            setGraphic(null);
+		       	        } else {
+		       		    String bucketName = "blossom-40039.appspot.com";
+		       		    String imageUrl =
+		       		        "https://firebasestorage.googleapis.com/v0/b/" + bucketName + "/o/"
+		       		            + URLEncoder.encode("profile_img/" + item.getUid(), StandardCharsets.UTF_8)
+		       		            + "?alt=media";
+
+		       		    Image image;
+
+		       		    try (InputStream in = new URL(imageUrl).openStream()) {
+		       		        image = new Image(in);
+		       		        
+		       		        Platform.runLater(() -> profileImageView.setImage(image));
+		       		        
+		       		        System.out.println("Loaded profile image for user: " + item.getUid());
+
+		       		    } catch (IOException e) {
+
+		       		        System.out.println("Failed to load profile image: " + e.getMessage());
+
+		       			String defaultImageUrl =
+		       			    "https://firebasestorage.googleapis.com/v0/b/" + bucketName + "/o/"
+		       			        + URLEncoder.encode("profile_img/default_image.jpg", StandardCharsets.UTF_8)
+		       			        + "?alt=media";
+
+		       			try (InputStream inDefault = new URL(defaultImageUrl).openStream()) {
+
+		       			    Image defaultImage = new Image(inDefault);
+
+		       			    Platform.runLater(() -> { 
+		       				if (!empty) { 
+		       				    profileImageView.setImage(defaultImage);
+		       				} 
+		       			    });
+
+		       			    System.out.println("Loaded default profile image");
+
+		       			} catch (IOException ex) {
+
+		       			    System.out.println("Failed to load default profile image: " + ex.getMessage());
+		       			}
+		       		    }
+
+		       		    nameLabel.setText(item.getName());
+		       		    setGraphic(content);
+		       	        }
+		       	    }
+		               
+		               
+		           };
+		       }
+		   });
+
+	        loadOriginalData();
+	    }
+
+	private ObservableList<UserInfo> originalData; // ì´ˆê¸° ì¹œêµ¬ ëª©ë¡ì„ ì €ì¥í•  ë³€ìˆ˜
+
+	private void loadOriginalData() {
+	    DatabaseReference friendsRef = FirebaseDatabase.getInstance().getReference("friends").child(User.getInstance().getUid());
+	    friendsRef.addValueEventListener(new ValueEventListener() {
+	        @Override
+	        public void onDataChange(DataSnapshot friendSnapshot) {
+	            // í˜„ì¬ ì‚¬ìš©ìì˜ ì¹œêµ¬ ëª©ë¡ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
+	            List<String> friendList = new ArrayList<>();
+	            for (DataSnapshot snapshot : friendSnapshot.getChildren()) {
+	                friendList.add(snapshot.getKey());
+	            }
+
+	            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+	                @Override
+	                public void onDataChange(DataSnapshot dataSnapshot) {
+	                    ObservableList<UserInfo> items = FXCollections.observableArrayList();
+
+	                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+	                        UserInfo userInfo = userSnapshot.getValue(UserInfo.class);
+	                        
+	                        if (!userInfo.getUid().equals(User.getInstance().getUid()) && !friendList.contains(userInfo.getUid())) { 
+	                            items.add(userInfo);
+	                        }
+	                    }
+
+	                    listView.setItems(items); // Set the items of the ListView
+
+	                    if (originalData == null) {  
+	                        originalData = FXCollections.observableArrayList();
+	                    }
+
+	                    originalData.clear();
+	                    originalData.addAll(items);
+
+	                }
+
+	                @Override
+	                public void onCancelled(DatabaseError databaseError) {}
+	           });
+	       }
+
+	       @Override
+	       public void onCancelled(DatabaseError error) {}
+	   });
+	}
+
+	// ì´ì „ handleTextFieldChange ë©”ì†Œë“œë¥¼ ìˆ˜ì •í•˜ì—¬ ìƒˆë¡œìš´ ë©”ì†Œë“œë¡œ ë§Œë“­ë‹ˆë‹¤.
+	private void handleTextFieldChange(String searchText) {
+		searchText = searchText.trim().toLowerCase();
+		ObservableList<UserInfo> filteredList = FXCollections.observableArrayList();
+
+		for (UserInfo userInfo : originalData) {
+			// ì´ë¦„ì„ ì†Œë¬¸ìë¡œ ë³€í™˜í•œ ë’¤ ê²€ìƒ‰ì–´ê°€ í¬í•¨ë˜ì–´ ìˆëŠ”ì§€ í™•ì¸
+			if (userInfo.getName().toLowerCase().contains(searchText)) {
+				filteredList.add(userInfo);
+			}
+		}
+
+		if (searchText.isEmpty()) {
+			// í…ìŠ¤íŠ¸ í•„ë“œê°€ ë¹„ì–´ ìˆìœ¼ë©´ originalDataë¥¼ ë‹¤ì‹œ ì„¤ì •í•˜ì—¬ ì´ˆê¸° ì¹œêµ¬ ëª©ë¡ì„ í‘œì‹œ
+			listView.setItems(originalData);
+		} else {
+			listView.setItems(filteredList);
+		}
+	}
 
 }
