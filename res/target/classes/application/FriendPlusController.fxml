@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="960.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.FriendPlusController">
+   <children>
+      <Pane prefHeight="960.0" prefWidth="500.0" style="-fx-background-color: #EFF8FE;">
+         <children>
+            <Text fx:id="name" layoutX="58.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text="닉네임" wrappingWidth="104.016357421875">
+               <font>
+                  <Font name="Hancom Gothic Regular" size="32.0" />
+               </font>
+            </Text>
+            <TextField fx:id="FriendPlus" layoutX="275.0" layoutY="82.0" prefHeight="36.0" prefWidth="201.0" promptText="이름을 입력하세요">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </TextField>
+            <ImageView id="SearchBtn" fx:id="SFRID" fitHeight="45.0" fitWidth="45.0" layoutX="218.0" layoutY="78.0" onMouseClicked="#searchBtn">
+               <image>
+                  <Image url="@../search.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+      <ImageView fx:id="prevBtn" fitHeight="24.0" fitWidth="29.0" layoutX="10.0" layoutY="10.0">
+         <image>
+            <Image url="@../arrow.png" />
+         </image>
+      </ImageView>
+            <AnchorPane layoutY="180.0" minHeight="0.0" minWidth="0.0" prefHeight="599.0" prefWidth="500.0">
+               <children>
+                  <ListView fx:id="listView" layoutY="-1.0" prefHeight="600.0" prefWidth="500.0" styleClass="my-list-view">
+            
+                  </ListView>
+
+               </children>
+            </AnchorPane>
+      <ImageView fx:id="profileImage" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Seungjun.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
